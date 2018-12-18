@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Filters;
 using WebAPICoreDapper.Models;
 
 namespace WebAPICoreDapper.Controllers
@@ -78,9 +79,9 @@ namespace WebAPICoreDapper.Controllers
         }
         // POST: api/Product
         [HttpPost]
-        public async Task<int> Post([FromBody] Product product)
+        [ValidateModel]
+        public async Task<IActionResult> Post([FromBody] Product product)
         {
-            int newId = 0;
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
@@ -93,14 +94,16 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@id", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
                 var result = await conn.ExecuteAsync("Create_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
 
-                newId = paramaters.Get<int>("@id");
+                int newId = paramaters.Get<int>("@id");
+                return Ok(newId);
             }
-            return newId;
+           
         }
 
         // PUT: api/Product/5
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Product product)
+        [ValidateModel]
+        public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -113,6 +116,7 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@isActive", product.Sku);
                 paramaters.Add("@imageUrl", product.ImageUrl);
                 await conn.ExecuteAsync("Update_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
+                return Ok();
             }
         }
 
