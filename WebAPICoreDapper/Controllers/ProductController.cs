@@ -26,6 +26,7 @@ namespace WebAPICoreDapper.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
+            throw new Exception("test");
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
