@@ -18,7 +18,7 @@ using WebAPICoreDapper.Resources;
 
 namespace WebAPICoreDapper.Controllers
 {
-    
+
     [Route("api/{culture}/[controller]")]
     [ApiController]
     [MiddlewareFilter(typeof(LocalizationPipeline))]
@@ -41,14 +41,17 @@ namespace WebAPICoreDapper.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
-            var culture = CultureInfo.CurrentCulture.Name;
-            string text = _localizer["Test"];
-            string text1 = _locService.GetLocalizedHtmlString("ForgotPassword");
+            //string text = _localizer["Test"];
+            //string text1 = _locService.GetLocalizedHtmlString("ForgotPassword");
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
-                var result = await conn.QueryAsync<Product>("Get_Product_All", null, null, null, System.Data.CommandType.StoredProcedure);
+
+                var paramaters = new DynamicParameters();
+                paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
+
+                var result = await conn.QueryAsync<Product>("Get_Product_All", paramaters, null, null, System.Data.CommandType.StoredProcedure);
                 return result;
             }
         }
@@ -63,13 +66,15 @@ namespace WebAPICoreDapper.Controllers
                     conn.Open();
                 var paramaters = new DynamicParameters();
                 paramaters.Add("@id", id);
+                paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
+
                 var result = await conn.QueryAsync<Product>("Get_Product_ById", paramaters, null, null, System.Data.CommandType.StoredProcedure);
                 return result.Single();
             }
         }
 
-        [HttpGet("paging",Name = "GetPaging")]
-        public async Task<PagedResult<Product>> GetPaging(string keyword,int categoryId, int pageIndex, int pageSize)
+        [HttpGet("paging", Name = "GetPaging")]
+        public async Task<PagedResult<Product>> GetPaging(string keyword, int categoryId, int pageIndex, int pageSize)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -80,16 +85,19 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@categoryId", categoryId);
                 paramaters.Add("@pageIndex", pageIndex);
                 paramaters.Add("@pageSize", pageSize);
+                paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
+
                 paramaters.Add("@totalRow", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
 
                 var result = await conn.QueryAsync<Product>("Get_Product_AllPaging", paramaters, null, null, System.Data.CommandType.StoredProcedure);
 
                 int totalRow = paramaters.Get<int>("@totalRow");
 
-                var pagedResult = new PagedResult<Product>() {
+                var pagedResult = new PagedResult<Product>()
+                {
                     Items = result.ToList(),
                     TotalRow = totalRow,
-                    PageIndex= pageIndex,
+                    PageIndex = pageIndex,
                     PageSize = pageSize
                 };
                 return pagedResult;
@@ -105,17 +113,26 @@ namespace WebAPICoreDapper.Controllers
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
                 var paramaters = new DynamicParameters();
+                paramaters.Add("@name", product.Name);
+                paramaters.Add("@description", product.Description);
+                paramaters.Add("@content", product.Content);
+                paramaters.Add("@seoDescription", product.SeoDescription);
+                paramaters.Add("@seoAlias", product.SeoAlias);
+                paramaters.Add("@seoTitle", product.SeoTitle);
+                paramaters.Add("@seoKeyword", product.SeoKeyword);
                 paramaters.Add("@sku", product.Sku);
                 paramaters.Add("@price", product.Price);
-                paramaters.Add("@isActive", product.Sku);
+                paramaters.Add("@isActive", product.IsActive);
                 paramaters.Add("@imageUrl", product.ImageUrl);
+                paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
+
                 paramaters.Add("@id", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
                 var result = await conn.ExecuteAsync("Create_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
 
                 int newId = paramaters.Get<int>("@id");
                 return Ok(newId);
             }
-           
+
         }
 
         // PUT: api/Product/5
@@ -129,10 +146,19 @@ namespace WebAPICoreDapper.Controllers
                     conn.Open();
                 var paramaters = new DynamicParameters();
                 paramaters.Add("@id", id);
+                paramaters.Add("@name", product.Name);
+                paramaters.Add("@description", product.Description);
+                paramaters.Add("@content", product.Content);
+                paramaters.Add("@seoDescription", product.SeoDescription);
+                paramaters.Add("@seoAlias", product.SeoAlias);
+                paramaters.Add("@seoTitle", product.SeoTitle);
+                paramaters.Add("@seoKeyword", product.SeoKeyword);
                 paramaters.Add("@sku", product.Sku);
                 paramaters.Add("@price", product.Price);
-                paramaters.Add("@isActive", product.Sku);
+                paramaters.Add("@isActive", product.IsActive);
                 paramaters.Add("@imageUrl", product.ImageUrl);
+                paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
+
                 await conn.ExecuteAsync("Update_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
                 return Ok();
             }
