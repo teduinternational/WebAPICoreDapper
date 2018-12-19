@@ -1,35 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Extensions;
 using WebAPICoreDapper.Filters;
 using WebAPICoreDapper.Models;
+using WebAPICoreDapper.Resources;
 
 namespace WebAPICoreDapper.Controllers
 {
-    [Route("api/[controller]")]
+    
+    [Route("api/{culture}/[controller]")]
     [ApiController]
+    [MiddlewareFilter(typeof(LocalizationPipeline))]
     public class ProductController : ControllerBase
     {
         private readonly string _connectionString;
         private readonly ILogger<ProductController> _logger;
-        public ProductController(IConfiguration configuration, ILogger<ProductController> logger)
+        private readonly IStringLocalizer<ProductController> _localizer;
+        private readonly LocService _locService;
+
+        public ProductController(IConfiguration configuration, LocService locService, ILogger<ProductController> logger,
+            IStringLocalizer<ProductController> localizer)
         {
             _connectionString = configuration.GetConnectionString("DbConnectionString");
             _logger = logger;
+            _locService = locService;
+            _localizer = localizer;
         }
         // GET: api/Product
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
-            _logger.LogTrace("Test product controller");
+            var culture = CultureInfo.CurrentCulture.Name;
+            string text = _localizer["Test"];
+            string text1 = _locService.GetLocalizedHtmlString("ForgotPassword");
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

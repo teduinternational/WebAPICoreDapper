@@ -10,7 +10,8 @@ namespace WebAPICoreDapper.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "SKURequiredErrorMsg")]
+        [StringLength(8, ErrorMessage = "SKUMinAndMaxLengthErrorMsg", MinimumLength = 6)]
         public string Sku { get; set; }
 
         public float Price { get; set; }
