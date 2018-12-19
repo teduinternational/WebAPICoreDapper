@@ -1,6 +1,6 @@
 USE [RestAPIDapper]
 GO
-/****** Object:  StoredProcedure [dbo].[Get_Product_AllPaging]    Script Date: 12/19/2018 10:11:56 PM ******/
+/****** Object:  StoredProcedure [dbo].[Get_Product_AllPaging]    Script Date: 12/19/2018 10:38:40 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,7 +23,10 @@ BEGIN
 
 	select @totalRow = count(*) from Products p 
 	inner join ProductTranslations pt on p.Id = pt.ProductId
+	left join ProductInCategories pic on p.Id = pic.ProductId
+	left join Categories c on c.Id = pic.CategoryId
 	where (@keyword is null or p.Sku like @keyword +'%') and p.IsActive = 1
+	and pic.CategoryId = @categoryId
 
 	select p.Id,
 		p.Sku,
@@ -40,12 +43,16 @@ BEGIN
 		pt.SeoDescription,
 		pt.SeoKeyword,
 		pt.SeoTitle,
-		pt.LanguageId
+		pt.LanguageId,
+		c.Name as CategoryName
 	from Products p 
 	inner join ProductTranslations pt on p.Id = pt.ProductId 
+	left join ProductInCategories pic on p.Id = pic.ProductId
+	left join Categories c on c.Id = pic.CategoryId
 	where (@keyword is null or p.Sku like @keyword +'%')
 	and pt.LanguageId = @language
 	and p.IsActive = 1
+	and pic.CategoryId = @categoryId
 	order by p.CreatedAt desc
 	offset (@pageIndex - 1) * @pageSize rows
 	fetch next @pageSize row only

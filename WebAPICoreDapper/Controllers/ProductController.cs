@@ -125,7 +125,7 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@isActive", product.IsActive);
                 paramaters.Add("@imageUrl", product.ImageUrl);
                 paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
-
+                paramaters.Add("@categoryIds", product.CategoryIds);
                 paramaters.Add("@id", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
                 var result = await conn.ExecuteAsync("Create_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
 
@@ -158,7 +158,7 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@isActive", product.IsActive);
                 paramaters.Add("@imageUrl", product.ImageUrl);
                 paramaters.Add("@language", CultureInfo.CurrentCulture.Name);
-
+                paramaters.Add("@categoryIds", product.CategoryIds);
                 await conn.ExecuteAsync("Update_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
                 return Ok();
             }
