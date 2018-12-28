@@ -26,7 +26,7 @@ namespace WebAPICoreDapper.Data
             {
                 await connection.OpenAsync(cancellationToken);
                 role.Id = Guid.NewGuid();
-                await connection.QuerySingleAsync($@"INSERT INTO [AspNetRoles] ([Id], [Name], [NormalizedName])
+                await connection.ExecuteAsync($@"INSERT INTO [AspNetRoles] ([Id], [Name], [NormalizedName])
                     VALUES (@{nameof(AppRole.Id)},@{nameof(AppRole.Name)}, @{nameof(AppRole.NormalizedName)});", role);
             }
 
