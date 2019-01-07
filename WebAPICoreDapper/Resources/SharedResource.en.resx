@@ -120,4 +120,10 @@
   <data name="ForgotPassword" xml:space="preserve">
     <value>Forgot password</value>
   </data>
+  <data name="MinAndMaxLengthErrorMsg" xml:space="preserve">
+    <value>{0} have to at least {2} characters.</value>
+  </data>
+  <data name="RequiredErrorMsg" xml:space="preserve">
+    <value>{0} is required</value>
+  </data>
 </root>

@@ -120,4 +120,10 @@
   <data name="ForgotPassword" xml:space="preserve">
     <value>Quên mật khẩu</value>
   </data>
+  <data name="MinAndMaxLengthErrorMsg" xml:space="preserve">
+    <value>{0} cần phải có ít nhất là {2} ký tự.</value>
+  </data>
+  <data name="RequiredErrorMsg" xml:space="preserve">
+    <value>Bạn cần phải nhập {0}</value>
+  </data>
 </root>
