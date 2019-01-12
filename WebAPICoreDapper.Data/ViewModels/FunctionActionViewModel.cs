@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPICoreDapper.ViewModels
+namespace WebAPICoreDapper.Data.ViewModels
 {
     public class FunctionActionViewModel
     {

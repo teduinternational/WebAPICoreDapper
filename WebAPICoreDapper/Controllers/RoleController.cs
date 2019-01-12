@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Data.Models;
 using WebAPICoreDapper.Filters;
-using WebAPICoreDapper.Models;
+using WebAPICoreDapper.Utilities.Dtos;
 
 namespace WebAPICoreDapper.Controllers
 {

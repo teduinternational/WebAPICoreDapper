@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPICoreDapper.Constants
+namespace WebAPICoreDapper.Utilities.Constants
 {
     public class SystemConstants
     {

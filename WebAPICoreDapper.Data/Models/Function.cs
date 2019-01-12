@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPICoreDapper.Models
+namespace WebAPICoreDapper.Data.Models
 {
     public class Function
     {

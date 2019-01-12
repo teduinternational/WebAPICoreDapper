@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPICoreDapper.Models;
 
-namespace WebAPICoreDapper.Dtos
+namespace WebAPICoreDapper.Utilities.Dtos
 {
     public class PagedResult<T>
     {

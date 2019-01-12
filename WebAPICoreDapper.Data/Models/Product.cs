@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPICoreDapper.Resources;
 
-namespace WebAPICoreDapper.Models
+namespace WebAPICoreDapper.Data.Models
 {
     public class Product
     {

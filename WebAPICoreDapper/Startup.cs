@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using WebAPICoreDapper.Data;
-using WebAPICoreDapper.Models;
+using WebAPICoreDapper.Data.Models;
 using WebAPICoreDapper.Resources;
 
 namespace WebAPICoreDapper
