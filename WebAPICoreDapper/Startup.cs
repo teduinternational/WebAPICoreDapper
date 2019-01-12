@@ -24,6 +24,8 @@ using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using WebAPICoreDapper.Data;
 using WebAPICoreDapper.Data.Models;
+using WebAPICoreDapper.Data.Repositories;
+using WebAPICoreDapper.Data.Repositories.Interfaces;
 using WebAPICoreDapper.Resources;
 
 namespace WebAPICoreDapper
@@ -42,6 +44,7 @@ namespace WebAPICoreDapper
         {
             services.AddTransient<IUserStore<AppUser>, UserStore>();
             services.AddTransient<IRoleStore<AppRole>, RoleStore>();
+            services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddIdentity<AppUser, AppRole>()
                 .AddDefaultTokenProviders();

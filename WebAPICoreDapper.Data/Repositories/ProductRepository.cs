@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,16 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAPICoreDapper.Data.Models;
+using WebAPICoreDapper.Data.Repositories.Interfaces;
 using WebAPICoreDapper.Utilities.Dtos;
 
 namespace WebAPICoreDapper.Data.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<ProductRepository> _logger;
 
-        public ProductRepository(IConfiguration configuration)
+        public ProductRepository(IConfiguration configuration,ILogger<ProductRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("DbConnectionString");
         }
         public async Task<IEnumerable<Product>> GetAllAsync(string culture)

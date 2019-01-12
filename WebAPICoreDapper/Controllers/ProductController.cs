@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using WebAPICoreDapper.Data.Models;
 using WebAPICoreDapper.Data.Repositories;
+using WebAPICoreDapper.Data.Repositories.Interfaces;
 using WebAPICoreDapper.Extensions;
 using WebAPICoreDapper.Filters;
 using WebAPICoreDapper.Resources;
@@ -27,16 +28,17 @@ namespace WebAPICoreDapper.Controllers
         private readonly IStringLocalizer<ProductController> _localizer;
         private readonly LocService _locService;
 
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductController(IConfiguration configuration, LocService locService, ILogger<ProductController> logger,
+        public ProductController(IConfiguration configuration, LocService locService, 
+            ILogger<ProductController> logger, IProductRepository productRepository,
             IStringLocalizer<ProductController> localizer)
         {
             _connectionString = configuration.GetConnectionString("DbConnectionString");
             _logger = logger;
             _locService = locService;
             _localizer = localizer;
-            _productRepository = new ProductRepository(configuration);
+            _productRepository =  productRepository;
         }
         // GET: api/Product
         [HttpGet]
