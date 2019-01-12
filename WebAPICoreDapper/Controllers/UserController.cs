@@ -103,7 +103,50 @@ namespace WebAPICoreDapper.Controllers
             return BadRequest();
         }
 
-        // DELETE: api/ApiWithActions/5
+        [HttpPut("{id}/{roleName}/assign-to-roles")]
+        public async Task<IActionResult> AssignToRoles([Required]Guid id, [Required]string roleName)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var normalizedName = roleName.ToUpper();
+                var roleId = await connection.ExecuteScalarAsync<Guid?>($"SELECT [Id] FROM [AspNetRoles] WHERE [NormalizedName] = @{nameof(normalizedName)}", new { normalizedName });
+                if (!roleId.HasValue)
+                {
+                    roleId = Guid.NewGuid();
+                    await connection.ExecuteAsync($"INSERT INTO [AspNetRoles]([Id],[Name], [NormalizedName]) VALUES(@{nameof(roleId)},@{nameof(roleName)}, @{nameof(normalizedName)})",
+                       new { roleName, normalizedName });
+                }
+
+
+                await connection.ExecuteAsync($"IF NOT EXISTS(SELECT 1 FROM [AspNetUserRoles] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}) " +
+                    $"INSERT INTO [AspNetUserRoles]([UserId], [RoleId]) VALUES(@userId, @{nameof(roleId)})",
+                    new { userId = user.Id, roleId });
+                return Ok();
+            }
+        }
+        [HttpDelete("{id}/{roleName}/remove-roles")]
+        [ValidateModel]
+        public async Task<IActionResult> RemoveRoleToUser([Required]Guid id, [Required]string roleName)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var roleId = await connection.ExecuteScalarAsync<Guid?>("SELECT [Id] FROM [AspNetRoles] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
+                if (roleId.HasValue)
+                    await connection.ExecuteAsync($"DELETE FROM [AspNetUserRoles] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}", new { userId = user.Id, roleId });
+                return Ok();
+            }
+        }
+        [HttpGet("{id}/roles")]
+        public async Task<IActionResult> GetUserRoles(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            var model = await _userManager.GetRolesAsync(user);
+            return Ok(model);
+        }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
