@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WebAPICoreDapper.Data.Models;
+using WebAPICoreDapper.Data.ViewModels;
 using WebAPICoreDapper.Utilities.Dtos;
 
 namespace WebAPICoreDapper.Data.Repositories.Interfaces
@@ -19,6 +20,11 @@ namespace WebAPICoreDapper.Data.Repositories.Interfaces
         Task Update(string culture, int id, Product product);
 
         Task Delete(int id);
+
+        Task<List<ProductAttributeViewModel>> GetAttributes(int id, string culture);
+
+        Task<PagedResult<Product>> SearchByAttributes(string keyword, string culture,
+            int categoryId,string size, int pageIndex, int pageSize);
 
 
     }
