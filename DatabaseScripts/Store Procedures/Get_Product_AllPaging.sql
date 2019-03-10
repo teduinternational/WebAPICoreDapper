@@ -10,7 +10,7 @@ GO
 -- Create date: 18/12/2018
 -- Description:	Get all product with paging
 -- =============================================
-ALTER PROCEDURE [dbo].[Get_Product_AllPaging]
+CREATE PROCEDURE [dbo].[Get_Product_AllPaging]
 	@keyword nvarchar(50),
 	@categoryId int,
 	@pageIndex int,

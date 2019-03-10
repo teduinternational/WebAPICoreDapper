@@ -7,8 +7,17 @@ select * from AspNetRoles
 select * from AspNetUserRoles
 select * from Permissions
 --Add user to role
+select * from AspNetUsers
+select * from AspNetRoles
 
+insert into AspNetRoles values(newid(),'Admin','ADMIN',null)
 
+select * from AspNetRoles
+insert into AspNetUserRoles values('A1B2227F-9B3F-47C3-912B-F03C397174D6','C5F3B7E4-D487-48BA-AE9B-C60D6F6AD0B7')
+
+insert into Permissions values ('SYSTEM.USER','VIEW','C5F3B7E4-D487-48BA-AE9B-C60D6F6AD0B7')
+
+select * from ActionInFunctions
 --Insert to Actions
 
 insert into Actions(Id,Name,SortOrder,IsActive) values('CREATE',N'Tạo mới',1,1)
